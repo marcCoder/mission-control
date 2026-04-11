@@ -1,0 +1,166 @@
+﻿.team-page {
+  max-width: 1200px;
+}
+
+.team-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mission-card {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-muted) 100%);
+  border: 1px solid var(--accent);
+}
+
+.mission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.edit-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--accent);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.edit-btn:hover {
+  background-color: var(--accent-muted);
+}
+
+.mission-text {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.mission-input {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.mission-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.org-chart {
+  min-height: 300px;
+}
+
+.agents-tree {
+  padding: 20px 0;
+}
+
+.main-agent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.agent-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 24px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  min-width: 180px;
+  position: relative;
+}
+
+.agent-node.main {
+  background-color: var(--accent-muted);
+  border-color: var(--accent);
+}
+
+.sub-agents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.agent-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.agent-role {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.agent-device {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.agent-status {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  color: white;
+  margin-top: 4px;
+}
+
+.agents-list {
+  height: fit-content;
+}
+
+.agents {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.agent-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.agent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agent-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agent-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  color: white;
+}

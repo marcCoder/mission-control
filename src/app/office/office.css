@@ -1,0 +1,258 @@
+﻿.office-page {
+  max-width: 1200px;
+}
+
+.office-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.office-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.time-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.time {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+.date {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.office-legend {
+  display: flex;
+  gap: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+}
+
+.legend-icon.working {
+  background-color: var(--success);
+}
+
+.legend-icon.idle {
+  background-color: var(--warning);
+}
+
+.legend-icon.meeting {
+  background-color: var(--error);
+}
+
+.office-floor {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.office-walls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wall-top {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  letter-spacing: 4px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.desks-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.desk {
+  background-color: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.desk.working {
+  border-color: var(--success);
+  background-color: rgba(34, 191, 105, 0.05);
+}
+
+.desk.idle {
+  border-color: var(--warning);
+  background-color: rgba(245, 158, 11, 0.05);
+}
+
+.desk.meeting {
+  border-color: var(--error);
+  background-color: rgba(248, 113, 113, 0.05);
+}
+
+.desk-surface {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.agent-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.desk.idle .agent-avatar {
+  background-color: var(--text-tertiary);
+}
+
+.desk.meeting .agent-avatar {
+  background-color: var(--error);
+}
+
+.agent-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.status-indicator {
+  font-size: 9px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.status-indicator.working {
+  background-color: var(--success);
+}
+
+.status-indicator.idle {
+  background-color: var(--warning);
+}
+
+.status-indicator.meeting {
+  background-color: var(--error);
+}
+
+.desk-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.role {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.task {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.water-cooler {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(94, 106, 210, 0.1) 100%);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+}
+
+.wc-icon {
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.wc-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.wc-status {
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+.activity-panel {
+  height: fit-content;
+}
+
+.activity-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.activity-time {
+  font-size: 11px;
+  color: var(--text-tertiary);font-family: monospace;
+  min-width: 60px;
+}
+
+.activity-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
