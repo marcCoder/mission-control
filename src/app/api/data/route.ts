@@ -7,11 +7,15 @@ export async function GET() {
 
   try {
     const tasks = JSON.parse(fs.readFileSync(path.join(dataDir, 'tasks.json'), 'utf8'))
+    const projects = JSON.parse(fs.readFileSync(path.join(dataDir, 'projects.json'), 'utf8'))
+    const calendar = JSON.parse(fs.readFileSync(path.join(dataDir, 'calendar.json'), 'utf8'))
     const memories = JSON.parse(fs.readFileSync(path.join(dataDir, 'memories.json'), 'utf8'))
     const docs = JSON.parse(fs.readFileSync(path.join(dataDir, 'docs.json'), 'utf8'))
     
     return NextResponse.json({
       tasks: tasks.tasks,
+      projects: projects.projects,
+      events: calendar.events,
       memories: memories.memories,
       docs: docs.docs
     })

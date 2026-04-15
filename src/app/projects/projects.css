@@ -189,3 +189,58 @@
 .btn-secondary:hover {
   background-color: var(--bg-hover);
 }
+
+.project-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.task-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.task-badge.ai {
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}
+
+.task-badge.user {
+  background-color: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+}
+
+.task-title {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.task-status {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.task-date {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.task-row.done .task-title {
+  text-decoration: line-through;
+  opacity: 0.6;
+}

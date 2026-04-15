@@ -1,9 +1,9 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './calendar.css'
 
-interface ScheduledTask {
+interface CalendarEvent {
   id: number
   title: string
   time: string
@@ -11,20 +11,24 @@ interface ScheduledTask {
   recurring: 'daily' | 'weekly' | 'monthly' | 'none'
 }
 
-const initialTasks: ScheduledTask[] = [
-  { id: 1, title: 'Check emails', time: '09:00', date: '2026-04-11', recurring: 'daily' },
-  { id: 2, title: 'Review task board', time: '10:00', date: '2026-04-11', recurring: 'daily' },
-  { id: 3, title: 'Weekly sync', time: '14:00', date: '2026-04-13', recurring: 'weekly' },
-  { id: 4, title: 'Memory review', time: '18:00', date: '2026-04-14', recurring: 'weekly' },
-  { id: 5, title: 'Project planning', time: '10:00', date: '2026-04-15', recurring: 'monthly' },
-]
-
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 export default function Calendar() {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1))
-  const [selectedDay, setSelectedDay] = useState<number | null>(11)
+  const [events, setEvents] = useState<CalendarEvent[]>([])
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 15))
+  const [selectedDay, setSelectedDay] = useState<number | null>(15)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        setEvents(data.events || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()
@@ -41,14 +45,14 @@ export default function Calendar() {
     setSelectedDay(null)
   }
 
-  const getTasksForDay = (day: number) => {
+  const getEventsForDay = (day: number) => {
     const monthStr = String(month + 1).padStart(2, '0')
     const dayStr = String(day).padStart(2, '0')
     const dateStr = year + '-' + monthStr + '-' + dayStr
-    return initialTasks.filter(t => t.date === dateStr)
+    return events.filter(e => e.date === dateStr)
   }
 
-  const selectedTasks = selectedDay ? getTasksForDay(selectedDay) : []
+  const selectedEvents = selectedDay ? getEventsForDay(selectedDay) : []
 
   const renderDays = () => {
     const days = []
@@ -58,8 +62,8 @@ export default function Calendar() {
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const tasks = getTasksForDay(day)
-      const isToday = day === 11 && month === 3
+      const dayEvents = getEventsForDay(day)
+      const isToday = day === 15 && month === 3
       const isSelected = day === selectedDay
       days.push(
         <div
@@ -69,16 +73,20 @@ export default function Calendar() {
         >
           <span className='day-number'>{day}</span>
           <div className='day-tasks'>
-            {tasks.slice(0, 2).map(task => (
-              <div key={task.id} className='task-dot' title={task.title}></div>
+            {dayEvents.slice(0, 2).map(event => (
+              <div key={event.id} className='event-dot' title={event.title}></div>
             ))}
-            {tasks.length > 2 && <span className='more-tasks'>+{tasks.length - 2}</span>}
+            {dayEvents.length > 2 && <span className='more-tasks'>+{dayEvents.length - 2}</span>}
           </div>
         </div>
       )
     }
 
     return days
+  }
+
+  if (loading) {
+    return <div className='calendar-page'><p>Loading...</p></div>
   }
 return (
     <div className='calendar-page'>
@@ -104,28 +112,28 @@ return (
 
         <div className='scheduled-tasks card'>
           <h3 className='card-title'>
-            {selectedDay ? 'Tasks for Day ' + selectedDay : 'Select a Day'}
+            {selectedDay ? 'Events for Day ' + selectedDay : 'Select a Day'}
           </h3>
           {selectedDay ? (
-            selectedTasks.length > 0 ? (
+            selectedEvents.length > 0 ? (
               <div className='task-list'>
-                {selectedTasks.map(task => (
-                  <div key={task.id} className='scheduled-task'>
+                {selectedEvents.map(event => (
+                  <div key={event.id} className='scheduled-task'>
                     <div className='task-info'>
-                      <span className='task-title'>{task.title}</span>
-                      <span className='task-time'>{task.time}</span>
+                      <span className='task-title'>{event.title}</span>
+                      <span className='task-time'>{event.time}</span>
                     </div>
-                    <span className={'recurring-badge ' + task.recurring}>
-                      {task.recurring === 'none' ? 'One-time' : task.recurring}
+                    <span className={'recurring-badge ' + event.recurring}>
+                      {event.recurring === 'none' ? 'One-time' : event.recurring}
                     </span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className='no-tasks'>No tasks scheduled</p>
+              <p className='no-tasks'>No events scheduled</p>
             )
           ) : (
-            <p className='no-tasks'>Click a day to see tasks</p>
+            <p className='no-tasks'>Click a day to see events</p>
           )}
         </div>
       </div>

@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './docs.css'
 
 interface Document {
@@ -8,31 +8,38 @@ interface Document {
   title: string
   category: string
   date: string
-  preview: string
+  content: string
 }
 
-const initialDocs: Document[] = [
-  { id: 1, title: 'Newsletter Draft #12', category: 'Newsletter', date: '2026-04-10', preview: 'This week we covered the basics of AI agents and how they can help automate your daily workflows...' },
-  { id: 2, title: 'Project Roadmap', category: 'Planning', date: '2026-04-09', preview: 'Phase 1: Build Mission Control dashboard with core screens. Phase 2: Add calendar integration...' },
-  { id: 3, title: 'Content Strategy Q2', category: 'Marketing', date: '2026-04-08', preview: 'Focus areas: Educational content about AI tools, behind-the-scenes of workflow automation...' },
-  { id: 4, title: 'Meeting Notes - AI Discussion', category: 'Notes', date: '2026-04-07', preview: 'Discussed the future of AI agents in productivity. Key takeaways: autonomy, memory, and tool use...' },
-  { id: 5, title: 'Product Requirements Doc', category: 'Planning', date: '2026-04-06', preview: 'Core features: Task board, calendar, memory viewer, document archive, team management...' },
-]
-
-const categories = ['All', 'Newsletter', 'Planning', 'Marketing', 'Notes']
+const categories = ['All', 'Technical', 'Workflow', 'Planning', 'Notes']
 
 export default function Docs() {
-  const [docs] = useState<Document[]>(initialDocs)
+  const [docs, setDocs] = useState<Document[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
 
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        setDocs(data.docs || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+
   const filteredDocs = docs.filter(doc => {
     const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.preview.toLowerCase().includes(searchQuery.toLowerCase())
+      doc.content.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === 'All' || doc.category === selectedCategory
     return matchesSearch && matchesCategory
   })
+
+  if (loading) {
+    return <div className='docs-page'><p>Loading...</p></div>
+  }
 return (
     <div className='docs-page'>
       <div className='page-header'>
@@ -79,8 +86,7 @@ return (
                 <button onClick={() => setSelectedDoc(null)} className='close-btn'>X</button>
               </div>
               <div className='viewer-body'>
-                <p>{selectedDoc.preview}</p>
-                <p className='placeholder'>Full document content would appear here. In a real implementation, this would display the complete document text, formatted properly.</p>
+                <p>{selectedDoc.content}</p>
               </div>
               <div className='viewer-actions'>
                 <button className='btn-secondary'>Copy to Clipboard</button>
@@ -100,7 +106,7 @@ return (
                     <span className='doc-date'>{doc.date}</span>
                   </div>
                   <h3 className='doc-title'>{doc.title}</h3>
-                  <p className='doc-preview'>{doc.preview}</p>
+                  <p className='doc-preview'>{doc.content}</p>
                 </div>
               ))}
               {filteredDocs.length === 0 && (

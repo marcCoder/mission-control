@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './memories.css'
 
 interface Memory {
@@ -10,49 +10,30 @@ interface Memory {
   details: string[]
 }
 
-const initialMemories: Memory[] = [
-  {
-    id: 1,
-    date: '2026-04-11',
-    summary: 'Mission Control Setup',
-    details: [
-      'Discussed building a custom dashboard for OpenClaw',
-      'Created GitHub repository for mission-control',
-      'Set up Next.js project with dark theme',
-      'Built Task Board and Calendar screens',
-    ]
-  },
-  {
-    id: 2,
-    date: '2026-04-10',
-    summary: 'Planning Session',
-    details: [
-      'Discussed content creation workflow',
-      'Reviewed automation ideas for social media',
-      'Planned out 5 core screens for mission control',
-    ]
-  },
-  {
-    id: 3,
-    date: '2026-04-09',
-    summary: 'Learning Goals',
-    details: [
-      'Focused on improving technical knowledge',
-      'Discussed React and Next.js fundamentals',
-      'Covered Git workflow and version control',
-    ]
-  },
-]
-
 export default function Memories() {
-  const [memories] = useState<Memory[]>(initialMemories)
+  const [memories, setMemories] = useState<Memory[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        setMemories(data.memories || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const filteredMemories = memories.filter(m =>
     m.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
     m.details.some(d => d.toLowerCase().includes(searchQuery.toLowerCase()))
   )
+
+  if (loading) {
+    return <div className='memories-page'><p>Loading...</p></div>
+  }
 
   return (
     <div className='memories-page'>
@@ -77,7 +58,7 @@ export default function Memories() {
               <div
                 key={memory.id}
                 className={'memory-item ' + (selectedMemory?.id === memory.id ? 'selected' : '')}
-                onClick={() => setSelectedMemory(memory)}
+                onClick={() => setSelectedMemory(selectedMemory?.id === memory.id ? null : memory)}
               >
                 <span className='memory-date'>{memory.date}</span>
                 <span className='memory-summary'>{memory.summary}</span>
