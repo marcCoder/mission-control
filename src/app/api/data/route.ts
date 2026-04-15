@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 export async function GET() {
-  const dataDir = 'C:\\\\Users\\\\marcw\\\\mission-control\\\\data'
+  const dataDir = path.join(process.cwd(), 'public', 'data')
 
   try {
     const tasks = JSON.parse(fs.readFileSync(path.join(dataDir, 'tasks.json'), 'utf8'))
