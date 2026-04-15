@@ -168,3 +168,35 @@
   color: var(--text-secondary);
   line-height: 1.4;
 }
+
+.task-card.selected {
+  border-color: var(--accent);
+  background-color: var(--accent-muted);
+}
+
+.task-date {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+
+.task-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+text-transform: uppercase;
+}
+
+.detail-value {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}

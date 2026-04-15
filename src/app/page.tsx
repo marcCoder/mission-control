@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './page.css'
 
 interface Task {
@@ -9,21 +9,8 @@ interface Task {
   description: string
   assignee: 'A' | 'AI'
   status: 'backlog' | 'in-progress' | 'in-review' | 'done'
+  createdAt: string
 }
-
-const initialTasks: Task[] = [
-  { id: 1, title: 'Set up Mission Control', description: 'Build initial Next.js template with sidebar', assignee: 'AI', status: 'done' },
-  { id: 2, title: 'Create Task Board screen', description: 'Kanban board with columns and activity feed', assignee: 'AI', status: 'in-progress' },
-  { id: 3, title: 'Build Calendar view', description: 'Monthly calendar with scheduled tasks', assignee: 'AI', status: 'backlog' },
-  { id: 4, title: 'Define mission statement', description: 'Reverse prompt to establish team goals', assignee: 'A', status: 'in-review' },
-]
-
-const activityLog = [
-  { time: '10:42:15', action: 'Building Task Board component with Kanban layout' },
-  { time: '10:41:58', action: 'Creating sidebar navigation structure' },
-  { time: '10:41:30', action: 'Initializing Next.js project template' },
-  { time: '10:40:55', action: 'Reviewing Mission Control requirements' },
-]
 
 const columns = [
   { id: 'backlog', label: 'Backlog' },
@@ -33,9 +20,31 @@ const columns = [
 ]
 
 export default function TaskBoard() {
-  const [tasks] = useState<Task[]>(initialTasks)
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        setTasks(data.tasks || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const getTasksByStatus = (status: Task['status']) => tasks.filter(t => t.status === status)
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  }
+
+  if (loading) {
+    return <div className='task-board-page'><p>Loading...</p></div>
+  }
+
   return (
     <div className='task-board-page'>
       <div className='page-header'>
@@ -43,49 +52,42 @@ export default function TaskBoard() {
         <p>Track everything your AI is working on</p>
       </div>
 
-      <div className='task-board-layout'>
-        <div className='activity-feed card'>
-          <div className='card-header'>
-            <h3 className='card-title'>Live Activity</h3>
-          </div>
-          <div className='activity-list'>
-            {activityLog.map((item, i) => (
-              <div key={i} className='activity-item'>
-                <span className='activity-time'>{item.time}</span>
-                <span className='activity-action'>{item.action}</span>
+      <div className='kanban-board-full'>
+        <div className='kanban-columns'>
+          {columns.map(col => (
+            <div key={col.id} className='kanban-column'>
+              <div className='column-header'>
+                <span className='column-title'>{col.label}</span>
+                <span className='column-count'>{getTasksByStatus(col.id as Task['status']).length}</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className='kanban-board'>
-          <div className='kanban-header'>
-            <h2>Tasks</h2>
-            <button className='btn-primary'>+ New Task</button>
-          </div>
-          <div className='kanban-columns'>
-            {columns.map(col => (
-              <div key={col.id} className='kanban-column'>
-                <div className='column-header'>
-                  <span className='column-title'>{col.label}</span>
-                  <span className='column-count'>{getTasksByStatus(col.id as Task['status']).length}</span>
-                </div>
-                <div className='column-tasks'>
-                  {getTasksByStatus(col.id as Task['status']).map(task => (
-                    <div key={task.id} className={'task-card ' + (task.status === 'done' ? 'done' : '')}>
-                      <div className='task-header'>
-                        <span className={'assignee-badge ' + (task.assignee === 'AI' ? 'ai' : 'user')}>
-                          {task.assignee}
-                        </span>
-                      </div>
-                      <h4 className='task-title'>{task.title}</h4>
-                      <p className='task-description'>{task.description}</p>
+              <div className='column-tasks'>
+                {getTasksByStatus(col.id as Task['status']).map(task => (
+                  <div
+                    key={task.id}
+                    className={'task-card ' + (task.status === 'done' ? 'done' : '') + (selectedTask?.id === task.id ? 'selected' : '')}
+                    onClick={() => setSelectedTask(selectedTask?.id === task.id ? null : task)}
+                  >
+                    <div className='task-header'>
+                      <span className={'assignee-badge ' + (task.assignee === 'AI' ? 'ai' : 'user')}>
+                        {task.assignee}
+                      </span>
+                      <span className='task-date'>{formatDate(task.createdAt)}</span>
                     </div>
-                  ))}
-                </div>
+                    <h4 className='task-title'>{task.title}</h4>
+                    <p className='task-description'>{task.description}</p>
+                    {selectedTask?.id === task.id && (
+                      <div className='task-details'>
+                        <span className='detail-label'>Created:</span>
+                        <span className='detail-value'>{formatDate(task.createdAt)}</span>
+                        <span className='detail-label'>Status:</span>
+                        <span className='detail-value'>{task.status}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
